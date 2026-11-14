@@ -28,7 +28,7 @@ class Settings:
         self.second_alien_color = (200, 50, 50)
         self.second_alien_damaged_color = (40, 150, 70)
         self.second_alien_health = 2
-HEAD
+
         
         
         self.speedup_scale = 1.1
