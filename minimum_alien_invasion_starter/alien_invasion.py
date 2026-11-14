@@ -5,6 +5,7 @@ from bullet import Bullet
 from settings import Settings
 from ship import Ship
 from alien import Alien, SecondAlien
+from score import Score
 
 
 class AlienInvasion:
@@ -20,6 +21,7 @@ class AlienInvasion:
         self.bullets = pygame.sprite.Group()
         self.aliens = pygame.sprite.Group()
         self._create_fleet()
+        self.score = Score(self)
 
     def run_game(self):
         while True:
@@ -78,8 +80,10 @@ class AlienInvasion:
                         # minus one health, if return True, kill the alien
                         if alien.take_damage():
                             alien.kill()
+                            self.score.add_points(1)
                     else: #is normal alien
                         alien.kill()
+                        self.score.add_points(1)
 
         if not self.aliens:
             self.bullets.empty()
@@ -133,6 +137,7 @@ class AlienInvasion:
             bullet.draw_bullet()
         self.ship.blitme()
         self.aliens.draw(self.screen)
+        self.score.draw_score()
         pygame.display.flip()
 
     @staticmethod
