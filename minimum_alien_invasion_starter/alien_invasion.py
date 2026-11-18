@@ -7,6 +7,7 @@ from ship import Ship
 from game_state import GameState 
 from alien import Alien, SecondAlien
 from score import Score
+from button import Button 
 
 
 class AlienInvasion:
@@ -26,7 +27,9 @@ class AlienInvasion:
         self.game_state = GameState.START
         self.title_font = pygame.font.SysFont(None, 80)
         self.text_font = pygame.font.SysFont(None, 36)
-
+        self.start_button = Button(self, "Play", 430)
+        self.restart_button = Button(self, "Play again", 430)
+        
     def run_game(self):
         while True:
             self._check_events()
@@ -45,6 +48,8 @@ class AlienInvasion:
                 self._check_keydown_events(event)
             elif event.type == pygame.KEYUP:
                 self._check_keyup_events(event)
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                self._check_button_click(pygame.mouse.get_pos())
 
     def _check_keydown_events(self, event):
         if event.key == pygame.K_RIGHT:
@@ -66,6 +71,15 @@ class AlienInvasion:
             self.ship.moving_right = False
         elif event.key == pygame.K_LEFT:
             self.ship.moving_left = False
+            
+            
+            
+    def _check_button_click(self, mouse_pos):
+        if self.game_state == GameState.START and self.start_button.is_clicked(mouse_pos):
+            self.game_state = GameState.PLAYING
+        elif self.game_state == GameState.GAME_OVER and self.restart_button.is_clicked(mouse_pos):
+            self._start_new_game()
+    
 
     def _fire_bullet(self):
         if len(self.bullets) < self.settings.bullets_allowed:
@@ -171,10 +185,11 @@ class AlienInvasion:
         veil.fill(self.settings.bg_color)
         self.screen.blit(veil, (0, 0))
         title = self.title_font.render("ALIEN INVASION", True, (40, 40, 40))
-        prompt = self.text_font.render("Press ENTER to start", True, (40, 40, 40))
+        prompt = self.text_font.render("Click Play or press ENTER", True, (40, 40, 40))
         centre_x = self.settings.screen_width // 2
         self.screen.blit(title, title.get_rect(center=(centre_x, 280)))
-        self.screen.blit(prompt, prompt.get_rect(center=(centre_x, 360)))        
+        self.screen.blit(prompt, prompt.get_rect(center=(centre_x, 360)))
+        self.start_button.draw()      
 
 
 
@@ -184,10 +199,11 @@ class AlienInvasion:
         veil.fill(self.settings.bg_color)
         self.screen.blit(veil, (0, 0))
         title = self.title_font.render("GAME OVER", True, (40, 40, 40))
-        prompt = self.text_font.render("Press R or ENTER to restart", True, (40, 40, 40))
+        prompt = self.text_font.render("Click Play again or press R / ENTER", True, (40, 40, 40))
         centre_x = self.settings.screen_width // 2
         self.screen.blit(title, title.get_rect(center=(centre_x, 280)))
-        self.screen.blit(prompt, prompt.get_rect(center=(centre_x, 360))) 
+        self.screen.blit(prompt, prompt.get_rect(center=(centre_x, 360)))
+        self.restart_button.draw() 
         
         
     @staticmethod
