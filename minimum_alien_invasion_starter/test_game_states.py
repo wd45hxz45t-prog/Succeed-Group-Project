@@ -80,6 +80,19 @@ class GameStateTests(unittest.TestCase):
         self.assertAlmostEqual(self.game.settings.alien_speed, 1.2 * 1.1)
         self.assertGreater(len(self.game.aliens), 0)
 
+    def test_clicking_play_button_starts_the_game(self):
+        self.game._check_button_click(self.game.start_button.rect.center)
+        self.assertEqual(self.game.game_state, GameState.PLAYING)
+
+    def test_clicking_play_again_button_restarts(self):
+        """[INTERACTION] the new button triggers the same reset as the R key."""
+        self.game._start_new_game()
+        self.game.settings.increase_speed()
+        self.game.game_state = GameState.GAME_OVER
+        self.game._check_button_click(self.game.restart_button.rect.center)
+        self.assertEqual(self.game.game_state, GameState.PLAYING)
+        self.assertEqual(self.game.settings.alien_speed, 1.2)
+
 
 if __name__ == "__main__":
     unittest.main(exit=False)
